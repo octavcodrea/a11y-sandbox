@@ -1,9 +1,27 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import { MantineProvider } from "@mantine/core";
+import App from "./App";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test("renders A11y features toggle", () => {
+    const router = createMemoryRouter(
+        [
+            {
+                path: "/",
+                element: <App />,
+                children: [{ index: true, element: <div>Home</div> }],
+            },
+        ],
+        { initialEntries: ["/"] },
+    );
+
+    render(
+        <MantineProvider>
+            <RouterProvider router={router} />
+        </MantineProvider>,
+    );
+
+    expect(
+        screen.getByRole("button", { name: /Enable A11y Features/i }),
+    ).toBeInTheDocument();
 });

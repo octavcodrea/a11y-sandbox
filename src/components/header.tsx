@@ -10,7 +10,6 @@ import {
 import logo from "../assets/logo.svg";
 import profilePic from "../assets/profile.jpg";
 import { useHoverData, useStateStore } from "../lib/hooks";
-import BreadcrumbsComponent from "./breadcrumbs";
 import SDiv from "./s-div";
 import SearchBar from "./search-bar";
 

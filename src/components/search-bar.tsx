@@ -1,6 +1,6 @@
 import { Menu, rem, Text } from "@mantine/core";
 import { Search, X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cls, inputRootClass } from "../lib/utils";
 import SDiv from "./s-div";
 
@@ -23,8 +23,7 @@ const SearchBar = (props: SearchBarProps) => {
     const [lastAnnouncement, setLastAnnouncement] = useState("");
     const [inputFocused, setInputFocused] = useState(false);
 
-    const [openSearchTimer, setOpenSearchTimer] =
-        useState<NodeJS.Timeout | null>(null);
+    const openSearchTimer = useRef<NodeJS.Timeout | null>(null);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
@@ -40,20 +39,18 @@ const SearchBar = (props: SearchBarProps) => {
     }, [inputValue]);
 
     useEffect(() => {
-        if (openSearchTimer || (openSearchTimer && inputValue)) {
-            clearTimeout(openSearchTimer);
+        if (openSearchTimer.current) {
+            clearTimeout(openSearchTimer.current);
         }
 
         if (inputValue) {
-            setOpenSearchTimer(
-                setTimeout(() => {
-                    checkIfSearching();
-                }, 500),
-            );
+            openSearchTimer.current = setTimeout(() => {
+                checkIfSearching();
+            }, 500);
         } else {
             setSearchResultsOpen(false);
         }
-    }, [inputValue]);
+    }, [inputValue, checkIfSearching]);
 
     return (
         <div>
