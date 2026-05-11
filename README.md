@@ -28,18 +28,31 @@ Additional features:
 
 ## Tech stack
 
-- React 18 + TypeScript (Create React App)
+- React 18 + TypeScript
+- [Vite](https://vitejs.dev/) (dev server and production build)
 - React Router v6
 - Mantine (UI components)
 - Tailwind CSS + SCSS modules
 - Zustand (state)
 - Lucide React (icons)
+- [Vitest](https://vitest.dev/) + Testing Library (unit tests)
 
 ## Local setup
 
 ```bash
 npm install
-npm start
+npm run dev
 ```
 
-Runs at `http://localhost:3000`.
+Runs at `http://localhost:5173` (Vite default). You can also use `npm start`, which runs the same dev server.
+
+### Other commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm run build` | Typecheck (`tsc`) then production build to `dist/` |
+| `npm run preview` | Serve the contents of `dist/` locally |
+| `npm test` | Run Vitest in watch mode |
+| `npx vitest run` | Run tests once (e.g. in CI) |
+
+Deployment on Vercel uses the Vite preset; production output is written to **`dist/`**.
