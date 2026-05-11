@@ -1,5 +1,4 @@
 import { useHoverData, useStateStore } from "../lib/hooks";
-import c from "../../App.module.scss";
 import FileListItem, { FileListItemType } from "../components/file-list-item";
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Info } from "lucide-react";
@@ -45,15 +44,16 @@ const FileList = () => {
 
     const headerClass =
         "flex items-center justify-between cursor-pointer w-full";
-    const titleClass = "text-xl font-bold text-gray-700";
+    const titleClass = "text-base font-bold text-gray-700 sm:text-xl";
     const listClass = "flex flex-col gap-2";
 
     return (
         <div className="flex flex-col gap-5">
-            <h2 className="text-3xl font-bold">File manager</h2>
+            <h2 className="text-xl font-bold sm:text-3xl">File manager</h2>
             <p>
-                An example of a file manager, with accordion sections for
-                folders and files.
+                An example of a file manager with collapsible accordion
+                sections. Users should be able to understand the structure of
+                the file system at a glance,                 and expand or collapse sections with ease.
             </p>
 
             <div className="flex flex-col gap-4">

@@ -39,7 +39,7 @@ const ViewEmail = (props: ViewEmailProps) => {
                     </button>
                 </div>
                 <div className="flex items-center gap-4 p-2">
-                    <h3 className="text-xl font-bold">{email.subject}</h3>
+                    <h3 className="text-base font-bold sm:text-xl">{email.subject}</h3>
                 </div>
                 <div className="flex w-full items-center justify-between px-2">
                     <div className="flex items-center gap-2">

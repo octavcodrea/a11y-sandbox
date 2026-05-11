@@ -1,10 +1,12 @@
 import { Checkbox, Tooltip } from "@mantine/core";
-import { Star } from "lucide-react";
+import { Info, Star } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { emailCategories, emailExamples } from "../lib/constants";
 import { useHoverData, useStateStore } from "../lib/hooks";
 import { EmailCategoryType, EmailExampleType } from "../lib/types";
+import Code from "../components/code";
 import SDiv from "../components/s-div";
+import TabButton from "../components/tab-button";
 import ViewEmail from "../components/view-email";
 import { formatDate } from "../lib/utils";
 
@@ -14,6 +16,8 @@ const Emails = () => {
     const { handleMouseEnter: hoverOn, handleMouseLeave: hoverOff } =
         useHoverData();
     const hoverProps = { onMouseEnter: hoverOn, onMouseLeave: hoverOff };
+
+    const [info, setInfo] = useState(false);
 
     const [selectedCategory, setSelectedCategory] =
         useState<EmailCategoryType | null>(null);
@@ -48,21 +52,6 @@ const Emails = () => {
         );
     };
 
-    const handleMarkAsUnread = (id: string) => {
-        setEmailsData(
-            emailsData.map((email) => {
-                if (email.id === id) {
-                    return {
-                        ...email,
-                        read: false,
-                    };
-                }
-
-                return email;
-            }),
-        );
-    };
-
     const filteredEmails = useMemo(() => {
         if (selectedCategory === null) {
             return emailsData;
@@ -75,44 +64,44 @@ const Emails = () => {
 
     return (
         <div className="flex flex-col gap-4">
-            <h2 className="text-3xl font-bold">Emails</h2>
-            <p>An example of an email client, with a list of emails.</p>
+            <h2 className="text-xl font-bold sm:text-3xl">Emails</h2>
+            <p>
+                An example of an email client with category filters and a
+                message list. Users should be able to filter by category,
+                identify unread messages, and open individual emails.
+            </p>
 
-            <div className="flex min-h-[500px] flex-col gap-4 rounded-md border border-gray-200 p-2">
+            <div className="flex flex-col gap-4 rounded-md border border-gray-200 p-2 sm:min-h-[500px]">
                 {viewingEmail ? null : (
-                    <div className="flex w-full gap-2">
+                    <div className="flex w-full gap-2 overflow-x-auto pb-1">
                         {emailCategories.map((category) => {
-                            const ThisIcon = React.cloneElement(category.icon, {
-                                className: `${selectedCategory === category.id ? "stroke-blue-600" : "stroke-gray-500"} w-5 h-5`,
+                            const isActive = selectedCategory === category.id;
+                            const icon = React.cloneElement(category.icon, {
+                                className: `${isActive ? "stroke-blue-600" : "stroke-gray-500"} w-5 h-5`,
                             });
 
                             return (
-                                <button
+                                <TabButton
                                     role={a11yOn ? "tab" : undefined}
                                     key={category.id}
+                                    active={isActive}
+                                    icon={icon}
                                     onClick={() =>
                                         setSelectedCategory(category.id)
                                     }
-                                    className={`flex w-full gap-2 ${
-                                        selectedCategory === category.id
-                                            ? "bg-blue-100 font-semibold text-blue-600"
-                                            : "bg-gray-100"
-                                    } rounded-md p-2`}
+                                    className="flex-shrink-0 sm:flex-1"
                                     aria-selected={
-                                        a11yOn
-                                            ? selectedCategory === category.id
-                                            : undefined
+                                        a11yOn ? isActive : undefined
                                     }
                                     {...hoverProps}
                                 >
-                                    {ThisIcon}
                                     {category.name}
-                                </button>
+                                </TabButton>
                             );
                         })}
                     </div>
                 )}
-                <div className="min-h-[300px] overflow-auto">
+                <div className="overflow-auto sm:min-h-[300px]">
                     {viewingEmail ? (
                         <ViewEmail
                             email={viewingEmail}
@@ -133,7 +122,7 @@ const Emails = () => {
                                 {filteredEmails.map((email) => (
                                     <tr
                                         key={email.id}
-                                        className={` ${email.read ? "bg-gray-100" : "font-semibold"} relative flex w-full cursor-pointer items-center py-2`}
+                                        className={` ${email.read ? "bg-gray-100" : "font-semibold"} relative flex w-full cursor-pointer items-center py-2 text-xs sm:text-base`}
                                         onClick={() => setViewingEmail(email)}
                                     >
                                         <td className="flex px-2">
@@ -182,7 +171,7 @@ const Emails = () => {
                                             </Tooltip>
                                         </td>
 
-                                        <td className="flex max-w-[168px] flex-1">
+                                        <td className="flex flex-1 sm:max-w-[168px]">
                                             {email.from}
                                         </td>
                                         <td className="flex flex-1 text-center">
@@ -198,7 +187,7 @@ const Emails = () => {
                                                 {email.subject}
                                             </SDiv>
                                         </td>
-                                        <td className="flex px-4 text-right">
+                                        <td className="hidden px-4 text-right sm:flex">
                                             {formatDate(email.date)}
                                         </td>
                                     </tr>
@@ -207,6 +196,46 @@ const Emails = () => {
                         </table>
                     )}
                 </div>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-4">
+                <button
+                    onClick={() => setInfo(!info)}
+                    className="mr-auto flex items-center gap-2 px-2 font-semibold text-blue-600"
+                    aria-expanded={a11yOn ? info : undefined}
+                    {...hoverProps}
+                >
+                    <Info className="h-5 w-5" /> {info ? "Hide" : "Show"} A11y
+                    info - Emails
+                </button>
+
+                {info && (
+                    <p>
+                        The category tabs use <Code>role="tab"</Code> and{" "}
+                        <Code>aria-selected</Code> when accessibility is on, so
+                        assistive technology announces which filter is active
+                        and presents the row as a proper tab list. Without
+                        these, the tabs are plain buttons with no indication of
+                        their selected state beyond visual styling.
+                        <br />
+                        <br />
+                        Each row's checkbox gets an{" "}
+                        <Code>aria-label</Code> tied to the email subject, so
+                        screen readers read "Select email: Project update" rather
+                        than just "checkbox". The favourite star is a focusable{" "}
+                        <Code>button</Code> with an <Code>aria-label</Code>{" "}
+                        describing its current state ("Favorite" / "Not
+                        favorite") when a11y is on — without it, the control is
+                        an unlabelled, non-interactive element.
+                        <br />
+                        <br />
+                        The email subject cell becomes a <Code>button</Code>{" "}
+                        when a11y is on, making it keyboard-reachable. The table
+                        also has a visually hidden <Code>thead</Code> with
+                        column labels so screen readers can associate each cell
+                        with its column when navigating by row.
+                    </p>
+                )}
             </div>
         </div>
     );

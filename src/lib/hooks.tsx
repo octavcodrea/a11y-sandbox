@@ -1,4 +1,4 @@
-import { Attributes, HTMLAttributes, useMemo } from "react";
+import { HTMLAttributes, useMemo } from "react";
 import { create } from "zustand";
 import { tagBackgrounds } from "./utils";
 
@@ -17,6 +17,9 @@ interface StateStore {
     microphoneOn: boolean;
     cameraOn: boolean;
     handRaised: boolean;
+
+    dateOfBirth: string;
+    theme: "light" | "dark" | "system";
 }
 
 export const useStateStore = create<StateStore>((set) => ({
@@ -34,6 +37,9 @@ export const useStateStore = create<StateStore>((set) => ({
     microphoneOn: false,
     cameraOn: false,
     handRaised: false,
+
+    dateOfBirth: "1990-01-01",
+    theme: "system",
 }));
 
 //implementing a component where the user can hover over elements and see ARIA attributes
@@ -50,9 +56,12 @@ const attributesToCheck: {
     { label: "ARIA checked", value: "aria-checked" },
     { label: "ARIA current", value: "aria-current" },
     { label: "ARIA described by", value: "aria-describedby" },
+    { label: "ARIA labelled by", value: "aria-labelledby" },
     { label: "ARIA has popup", value: "aria-haspopup" },
     { label: "ARIA hidden", value: "aria-hidden" },
     { label: "ARIA selected", value: "aria-selected" },
+    { label: "ARIA invalid", value: "aria-invalid" },
+    { label: "ARIA required", value: "aria-required" },
 ];
 
 const tagsToMakeLabelFromTextContent = [
@@ -93,15 +102,58 @@ export const useHoverData = () => {
         let noValue = true;
 
         const ariaLabelValue = hoveredElement?.getAttribute("aria-label");
-        const textContent = hoveredElement
-            ? tagsToMakeLabelFromTextContent.includes(
-                  hoveredElement?.tagName.toLowerCase(),
-              )
-                ? hoveredElement?.textContent?.trim()
-                : null
+        const tag = hoveredElement?.tagName.toLowerCase();
+        const isInputLike =
+            tag === "input" || tag === "select" || tag === "textarea";
+        const placeholderValue = isInputLike
+            ? hoveredElement?.getAttribute("placeholder")
+            : null;
+        const textContent =
+            hoveredElement && !isInputLike
+                ? tagsToMakeLabelFromTextContent.includes(tag ?? "")
+                    ? hoveredElement?.textContent?.trim()
+                    : null
+                : null;
+
+        // label[for] → input relationship
+        const labelForValue =
+            tag === "label"
+                ? hoveredElement?.getAttribute("for")
+                : null;
+        const labelledInputEl = labelForValue
+            ? document.getElementById(labelForValue)
             : null;
 
-        if (ariaLabelValue || textContent) {
+        // input[id] → label relationship
+        const elementId = hoveredElement?.getAttribute("id");
+        const associatedLabelEl = elementId
+            ? document.querySelector(`label[for="${elementId}"]`)
+            : null;
+        const associatedLabelText =
+            associatedLabelEl?.textContent?.trim() || null;
+
+        // aria-describedby / aria-labelledby → resolved text
+        const describedById =
+            hoveredElement?.getAttribute("aria-describedby");
+        const describedByText = describedById
+            ? document.getElementById(describedById)?.textContent?.trim() ||
+              null
+            : null;
+
+        const labelledById =
+            hoveredElement?.getAttribute("aria-labelledby");
+        const labelledByText = labelledById
+            ? document.getElementById(labelledById)?.textContent?.trim() ||
+              null
+            : null;
+
+        if (
+            ariaLabelValue ||
+            textContent ||
+            placeholderValue ||
+            labelForValue ||
+            associatedLabelText
+        ) {
             noValue = false;
         }
 
@@ -125,24 +177,57 @@ export const useHoverData = () => {
                                 className="flex items-center gap-4"
                             >
                                 <strong className="text-sm">
-                                    {ariaLabelValue || textContent
-                                        ? !ariaLabelValue &&
-                                          tagsToMakeLabelFromTextContent.includes(
-                                              hoveredElement.tagName.toLowerCase(),
-                                          )
+                                    {ariaLabelValue
+                                        ? "ARIA label"
+                                        : placeholderValue
+                                          ? "Placeholder"
+                                          : textContent
                                             ? "Label (derived from text content)"
-                                            : "ARIA label"
-                                        : null}
+                                            : null}
                                 </strong>
                                 <span>
-                                    {ariaLabelValue || textContent || null}
+                                    {ariaLabelValue ||
+                                        placeholderValue ||
+                                        textContent ||
+                                        null}
                                 </span>
                             </div>
+
+                            {/* label[for] → shows which input it labels */}
+                            {labelForValue && (
+                                <div className="flex items-center gap-4">
+                                    <strong className="text-sm">
+                                        Labels input
+                                    </strong>
+                                    <span className="text-gray-500">
+                                        #{labelForValue}
+                                        {labelledInputEl ? (
+                                            <span className="ml-1 text-green-600">
+                                                ✓ linked
+                                            </span>
+                                        ) : (
+                                            <span className="ml-1 text-red-500">
+                                                ✗ no match
+                                            </span>
+                                        )}
+                                    </span>
+                                </div>
+                            )}
+
+                            {/* input[id] → shows which label points to it */}
+                            {associatedLabelText && (
+                                <div className="flex items-center gap-4">
+                                    <strong className="text-sm">
+                                        Labelled by
+                                    </strong>
+                                    <span>"{associatedLabelText}"</span>
+                                </div>
+                            )}
 
                             {attributesToCheck
                                 .filter((a) => a.value !== "aria-label")
                                 .map((attr) => {
-                                    let value = hoveredElement.getAttribute(
+                                    const value = hoveredElement.getAttribute(
                                         attr.value,
                                     );
 
@@ -150,7 +235,20 @@ export const useHoverData = () => {
                                         noValue = false;
                                     }
 
-                                    return value ? (
+                                    if (!value) return null;
+
+                                    // resolve referenced element text for id-based attributes
+                                    const isDescribedBy =
+                                        attr.value === "aria-describedby";
+                                    const isLabelledBy =
+                                        attr.value === "aria-labelledby";
+                                    const resolvedText = isDescribedBy
+                                        ? describedByText
+                                        : isLabelledBy
+                                          ? labelledByText
+                                          : null;
+
+                                    return (
                                         <div
                                             key={attr.value}
                                             className="flex items-center gap-4"
@@ -158,9 +256,13 @@ export const useHoverData = () => {
                                             <strong className="text-sm">
                                                 {attr.label}
                                             </strong>
-                                            <span>{value || null}</span>
+                                            <span>
+                                                {resolvedText
+                                                    ? `"${resolvedText}"`
+                                                    : value}
+                                            </span>
                                         </div>
-                                    ) : null;
+                                    );
                                 })}
 
                             {noValue && (

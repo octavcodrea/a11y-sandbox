@@ -19,7 +19,7 @@ const SettingsTabGeneral = () => {
             role={a11yOn ? "tabpanel" : undefined}
             aria-labelledby="general-tab"
         >
-            <h3 className="text-xl font-bold">General</h3>
+            <h3 className="text-base font-bold sm:text-xl">General</h3>
             <div className={settingsLabelContainerClass}>
                 <p className={labelClass}>First day of the week</p>
                 <Select

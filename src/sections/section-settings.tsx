@@ -36,9 +36,10 @@ const Settings = () => {
 
     const [activeTab, setActiveTab] = useState("Profile");
 
-    const containerClass = "flex border border-gray-200 rounded-lg ";
+    const containerClass =
+        "flex flex-col sm:flex-row border border-gray-200 rounded-lg";
     const tabContainerClass =
-        "flex flex-col gap-1 p-4 border-r border-gray-200 min-w-[200px]";
+        "flex flex-row sm:flex-col gap-1 p-2 sm:p-4 border-b sm:border-b-0 sm:border-r border-gray-200 sm:min-w-[200px]";
     const settingsContainerClass = "flex flex-col gap-4 w-full";
 
     const activeTabContent = useMemo(() => {
@@ -56,8 +57,12 @@ const Settings = () => {
 
     return (
         <div className="flex flex-col gap-4">
-            <h2 className="text-3xl font-bold">Settings</h2>
-            <p>An example of a settings panel with tabs.</p>
+            <h2 className="text-xl font-bold sm:text-3xl">Settings</h2>
+            <p>
+                An example of a settings panel with tabbed navigation. Users
+                should be able to tell which tab is currently active, switch
+                between sections, and interact with the content area.
+            </p>
 
             <div className={containerClass}>
                 <SDiv
@@ -71,7 +76,7 @@ const Settings = () => {
                             key={tab.name}
                             id={a11yOn ? tab.id : undefined}
                             onClick={() => setActiveTab(tab.name)}
-                            className={`flex justify-start text-lg ${
+                            className={`flex justify-start text-sm sm:text-lg ${
                                 activeTab === tab.name
                                     ? "font-bold text-blue-600"
                                     : ""

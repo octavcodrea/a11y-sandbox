@@ -17,6 +17,7 @@ import { VideoOff } from "lucide-react";
 import { Tooltip } from "@mantine/core";
 import { getGlobalKeybindString } from "../lib/keybinds";
 import Code from "../components/code";
+import IconButton from "../components/icon-button";
 
 const ConferenceControls = () => {
     const { a11yOn, microphoneOn, cameraOn, handRaised } = useStateStore(
@@ -98,22 +99,23 @@ const ConferenceControls = () => {
 
     return (
         <div className="flex flex-col gap-5">
-            <h2 className="text-3xl font-bold">Conference controls</h2>
-            <p>An example of a conference call control panel.</p>
+            <h2 className="text-xl font-bold sm:text-3xl">Conference controls</h2>
+            <p>
+                An example of a conference call toolbar with icon-only
+                controls. Users should be able to identify each button's
+                purpose and current state — such as whether the microphone is
+                muted or the camera is off.
+            </p>
 
             <div className="flex items-center justify-center gap-4">
                 <>
-                    <div className="flex gap-4 rounded-lg border border-gray-300 p-4">
+                    <div className="flex flex-wrap justify-center gap-4 rounded-lg border border-gray-300 p-4">
                         <Tooltip
                             label={`Toggle microphone (${getGlobalKeybindString("toggleAudio")})`}
                             position="top"
                         >
-                            <button
-                                className={`flex h-12 w-12 justify-center rounded-md ${
-                                    microphoneOn
-                                        ? "text-gray-600"
-                                        : "bg-red-100 text-red-500 hover:bg-red-200"
-                                }`}
+                            <IconButton
+                                variant={microphoneOn ? "default" : "danger"}
                                 onClick={handleToggleMic}
                                 aria-label={
                                     a11yOn
@@ -129,19 +131,15 @@ const ConferenceControls = () => {
                                 ) : (
                                     <MicOff size={32} />
                                 )}
-                            </button>
+                            </IconButton>
                         </Tooltip>
 
                         <Tooltip
                             label={`Toggle camera (${getGlobalKeybindString("toggleVideo")})`}
                             position="top"
                         >
-                            <button
-                                className={`flex h-12 w-12 justify-center rounded-md ${
-                                    cameraOn
-                                        ? "text-gray-600"
-                                        : "bg-red-100 text-red-500 hover:bg-red-200"
-                                }`}
+                            <IconButton
+                                variant={cameraOn ? "default" : "danger"}
                                 onClick={handleToggleCam}
                                 aria-label={
                                     a11yOn
@@ -157,15 +155,15 @@ const ConferenceControls = () => {
                                 ) : (
                                     <VideoOff size={32} />
                                 )}
-                            </button>
+                            </IconButton>
                         </Tooltip>
 
                         <Tooltip
                             label={`Toggle screen sharing (${getGlobalKeybindString("toggleScreenShare")})`}
                             position="top"
                         >
-                            <button
-                                className={`flex h-12 w-12 justify-center rounded-md ${screenShareOn ? "bg-blue-100 text-blue-600 hover:bg-blue-200" : "text-gray-600"}`}
+                            <IconButton
+                                variant={screenShareOn ? "active" : "default"}
                                 aria-label={
                                     a11yOn
                                         ? `Start screen sharing, ${getGlobalKeybindString("toggleScreenShare")}`
@@ -175,15 +173,15 @@ const ConferenceControls = () => {
                                 {...hoverProps}
                             >
                                 <MonitorUp size={32} />
-                            </button>
+                            </IconButton>
                         </Tooltip>
 
                         <Tooltip
                             label={`Toggle raise hand (${getGlobalKeybindString("toggleRaiseHand")})`}
                             position="top"
                         >
-                            <button
-                                className={`flex h-12 w-12 justify-center rounded-md ${handRaised ? "bg-blue-100 text-blue-600 hover:bg-blue-200" : "text-gray-600"}`}
+                            <IconButton
+                                variant={handRaised ? "active" : "default"}
                                 aria-label={
                                     a11yOn
                                         ? `Toggle raise hand, ${getGlobalKeybindString("toggleRaiseHand")}`
@@ -192,17 +190,13 @@ const ConferenceControls = () => {
                                 onClick={handleToggleHand}
                                 {...hoverProps}
                             >
-                                {handRaised ? (
-                                    <Hand size={32} />
-                                ) : (
-                                    <Hand size={32} />
-                                )}
-                            </button>
+                                <Hand size={32} />
+                            </IconButton>
                         </Tooltip>
 
                         <Tooltip label="Full screen" position="top">
-                            <button
-                                className="flex h-12 w-12 justify-center rounded-md text-gray-600"
+                            <IconButton
+                                variant="default"
                                 aria-label={a11yOn ? "Full screen" : undefined}
                                 onClick={handleToggleFullScreen}
                                 {...hoverProps}
@@ -212,17 +206,17 @@ const ConferenceControls = () => {
                                 ) : (
                                     <Expand size={32} />
                                 )}
-                            </button>
+                            </IconButton>
                         </Tooltip>
 
                         <Tooltip label="Leave call" position="top">
-                            <button
-                                className="flex h-12 w-12 justify-center rounded-md bg-red-100 text-red-500 hover:bg-red-200"
+                            <IconButton
+                                variant="danger"
                                 aria-label={a11yOn ? "Leave call" : undefined}
                                 {...hoverProps}
                             >
                                 <PhoneOff size={32} />
-                            </button>
+                            </IconButton>
                         </Tooltip>
                     </div>
 

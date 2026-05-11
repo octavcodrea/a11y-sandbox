@@ -32,27 +32,51 @@ const SettingsTabNotifications = () => {
             role={a11yOn ? "tabpanel" : undefined}
             aria-labelledby="notifications-tab"
         >
-            <h3 className="text-xl font-bold">Notifications</h3>
+            <h3 className="text-base font-bold sm:text-xl">Notifications</h3>
             <div className={settingsLabelContainerClass}>
-                <div className={settingsLabelContainerClass}>
-                    <p className={labelClass}>Email notifications</p>
-                    <Switch
-                        checked={emailNotifications}
-                        onChange={handleEmailNotificationsChange}
-                        wrapperProps={hoverProps}
-                    />
-                </div>
+                <p
+                    id={a11yOn ? "settings-email-notif-label" : undefined}
+                    className={labelClass}
+                    {...hoverProps}
+                >
+                    Email notifications
+                </p>
+                <Switch
+                    checked={emailNotifications}
+                    onChange={handleEmailNotificationsChange}
+                    aria-labelledby={
+                        a11yOn ? "settings-email-notif-label" : undefined
+                    }
+                    wrapperProps={{
+                        ...hoverProps,
+                        "aria-labelledby": a11yOn
+                            ? "settings-email-notif-label"
+                            : undefined,
+                    }}
+                />
             </div>
 
             <div className={settingsLabelContainerClass}>
-                <div className={settingsLabelContainerClass}>
-                    <p className={labelClass}>Push notifications</p>
-                    <Switch
-                        checked={pushNotifications}
-                        onChange={handlePushNotificationsChange}
-                        wrapperProps={hoverProps}
-                    />
-                </div>
+                <p
+                    id={a11yOn ? "settings-push-notif-label" : undefined}
+                    className={labelClass}
+                    {...hoverProps}
+                >
+                    Push notifications
+                </p>
+                <Switch
+                    checked={pushNotifications}
+                    onChange={handlePushNotificationsChange}
+                    aria-labelledby={
+                        a11yOn ? "settings-push-notif-label" : undefined
+                    }
+                    wrapperProps={{
+                        ...hoverProps,
+                        "aria-labelledby": a11yOn
+                            ? "settings-push-notif-label"
+                            : undefined,
+                    }}
+                />
             </div>
         </div>
     );

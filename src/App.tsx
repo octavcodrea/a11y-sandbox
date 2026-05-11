@@ -1,6 +1,7 @@
 import "@mantine/core/styles.css";
 import { Outlet } from "react-router-dom";
 import classes from "./App.module.scss";
+import Button from "./components/button";
 import Footer from "./components/footer";
 import KeyboardEventsHandler from "./components/keyboard-events-handler";
 import { useHoverData, useStateStore } from "./lib/hooks";
@@ -33,19 +34,23 @@ function App() {
                     classes.controls,
                 )}
             >
-                <button
+                <Button
+                    variant={allyOn ? "primary" : "secondary"}
+                    size="responsive"
                     onClick={toggleA11y}
-                    className={`w-fit cursor-pointer rounded-md border-none px-4 py-2 font-semibold text-white outline-8 outline-offset-2 outline-orange-400 ${allyOn ? "bg-blue-600 hover:bg-blue-700" : "z-50 bg-gray-600 hover:bg-gray-700"}`}
+                    className="w-fit outline-8 outline-offset-2 outline-orange-400"
                 >
                     {allyOn ? "Disable" : "Enable"} A11y Features
-                </button>
+                </Button>
 
-                <button
+                <Button
+                    variant={overlay ? "primary" : "secondary"}
+                    size="responsive"
                     onClick={toggleOverlay}
-                    className={`w-fit cursor-pointer rounded-md border-none px-4 py-2 font-semibold text-white outline-8 outline-offset-2 outline-orange-400 ${overlay ? "bg-blue-600 hover:bg-blue-700" : "z-50 bg-gray-600 hover:bg-gray-700"}`}
+                    className="w-fit outline-8 outline-offset-2 outline-orange-400"
                 >
                     Toggle overlay
-                </button>
+                </Button>
             </div>
 
             <div

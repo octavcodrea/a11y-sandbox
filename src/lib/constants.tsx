@@ -1,6 +1,40 @@
 import { Inbox, Info, Tag, Users } from "lucide-react";
 import { EmailCategoryObjectType, EmailExampleType } from "./types";
 
+export type ChatMessageType = {
+    id: string;
+    sender: "Alex" | "You";
+    text: string;
+    time: string;
+};
+
+export const mockMessages: ChatMessageType[] = [
+    {
+        id: "1",
+        sender: "Alex",
+        text: "Hey, how's the project going?",
+        time: "10:42 AM",
+    },
+    {
+        id: "2",
+        sender: "You",
+        text: "Pretty well! Almost done with the last section.",
+        time: "10:44 AM",
+    },
+    {
+        id: "3",
+        sender: "Alex",
+        text: "Nice! Let me know if you need a review.",
+        time: "10:45 AM",
+    },
+    {
+        id: "4",
+        sender: "You",
+        text: "Will do, thanks!",
+        time: "10:46 AM",
+    },
+];
+
 export const emailCategories: EmailCategoryObjectType[] = [
     { id: null, name: "All", icon: <Inbox /> },
     { id: "promotions", name: "Promotions", icon: <Tag /> },

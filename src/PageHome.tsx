@@ -6,6 +6,8 @@ import ConferenceControls from "./sections/section-conference-controls";
 import Emails from "./sections/section-emails";
 import FileList from "./sections/section-file-list";
 import Settings from "./sections/section-settings";
+import Chat from "./sections/section-chat";
+import SignupForm from "./sections/section-signup-form";
 import { useHoverData, useStateStore } from "./lib/hooks";
 import { cls } from "./lib/utils";
 import { useState } from "react";
@@ -36,17 +38,17 @@ const PageHome = () => {
                     )}
                 >
                     <div className="flex flex-col gap-4">
-                        <h1 className="text-4xl font-extrabold text-gray-800">
+                        <h1 className="text-2xl font-extrabold text-gray-800 sm:text-4xl">
                             A11y Sandbox
                         </h1>
                         <p>
                             This application demonstrates examples of a basic
-                            user interface with both effective and ineffective
-                            accessibility practices.
+                            user interface with both accessible and inaccessible
+                            practices.
                             <br />
                             The goal is to illustrate how a UI that appears
-                            adequate to a sighted user can be challenging for a
-                            user with disabilities.
+                            adequate to a sighted user can be challenging when
+                            using assistive technology.
                             <br />
                             {/* You can toggle the accessibility features using the
                             button below. */}
@@ -57,7 +59,25 @@ const PageHome = () => {
                             accessibility features are enabled or not.
                             <br /> However, the accessibility enhancements are
                             present and most noticeable when using a screen
-                            reader.
+                            reader or keyboard navigation.
+                        </p>
+
+                        <p>
+                            The app uses{" "}
+                            <a
+                                href="https://mantine.dev"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-blue-600 underline"
+                            >
+                                Mantine
+                            </a>{" "}
+                            as a component library. While Mantine provides
+                            accessible primitives, using a component library
+                            alone does not substitute for deliberate
+                            accessibility implementation — correct ARIA
+                            attributes, semantic markup, and labelling still
+                            require intentional choices from the developer.
                         </p>
                     </div>
 
@@ -121,6 +141,14 @@ const PageHome = () => {
                     <div className="flex w-full border-t border-gray-200" />
 
                     <Emails />
+
+                    <div className="flex w-full border-t border-gray-200" />
+
+                    <SignupForm />
+
+                    <div className="flex w-full border-t border-gray-200" />
+
+                    <Chat />
 
                     <div className="flex w-full border-t border-gray-200" />
                 </div>

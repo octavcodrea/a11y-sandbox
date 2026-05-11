@@ -50,11 +50,15 @@ const Header = () => {
                     />
                 </a>
 
-                <BreadcrumbsComponent />
+                {/* <span className="hidden sm:block">
+                    <BreadcrumbsComponent />
+                </span> */}
             </div>
 
             <div className={`flex items-center gap-4`}>
-                <SearchBar a11yOn={a11yOn} />
+                <span className="hidden sm:block">
+                    <SearchBar a11yOn={a11yOn} />
+                </span>
 
                 <Menu shadow="md" width={250} position="bottom-end">
                     <Menu.Target>

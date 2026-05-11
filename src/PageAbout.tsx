@@ -8,10 +8,10 @@ const PageAbout = () => {
 
     return (
         <div className="flex h-screen flex-col items-center justify-center gap-4">
-            <h1 className="text-6xl font-bold text-gray-800">About</h1>
+            <h1 className="text-3xl font-bold text-gray-800 sm:text-6xl">About</h1>
             <div
                 className={
-                    "max-w-lg text-center text-xl font-semibold text-gray-600"
+                    "max-w-lg text-center text-base font-semibold text-gray-600 sm:text-xl"
                 }
             >
                 App built by{" "}
